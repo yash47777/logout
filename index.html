@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Time to Leave Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .clock {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        .leave-time {
+            font-size: 20px;
+            margin-top: 20px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>Login Time to Leave Calculator</h1>
+
+    <!-- Input for login time -->
+    <label for="login-time">Enter your login time (HH:MM AM/PM): </label>
+    <input type="text" id="login-time" placeholder="e.g. 09:00 AM">
+    <button onclick="calculateLeaveTime()">Calculate Leave Time</button>
+
+    <div id="leave-time" class="leave-time"></div>
+    
+    <!-- Live clock display -->
+    <div id="clock" class="clock"></div>
+
+    <script>
+        // Function to update the live clock
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
+            document.getElementById("clock").innerText = `Current Time: ${timeString}`;
+        }
+
+        // Function to calculate and show leave time
+        function calculateLeaveTime() {
+            const loginTimeInput = document.getElementById("login-time").value;
+            const loginTime = new Date(`1970-01-01T${loginTimeInput.toUpperCase()}`);
+
+            if (isNaN(loginTime)) {
+                alert("Please enter a valid time in HH:MM AM/PM format.");
+                return;
+            }
+
+            // Calculate 8 hours and 30 minutes later
+            loginTime.setHours(loginTime.getHours() + 8);
+            loginTime.setMinutes(loginTime.getMinutes() + 30);
+
+            // Format the leave time to show in AM/PM
+            let leaveHours = loginTime.getHours();
+            let leaveMinutes = loginTime.getMinutes();
+            let leaveAmpm = leaveHours >= 12 ? 'PM' : 'AM';
+
+            leaveHours = leaveHours % 12;
+            leaveHours = leaveHours ? leaveHours : 12;  // the hour '0' should be '12'
+            leaveMinutes = leaveMinutes < 10 ? '0' + leaveMinutes : leaveMinutes;
+
+            const leaveTimeString = `${leaveHours}:${leaveMinutes} ${leaveAmpm}`;
+            document.getElementById("leave-time").innerText = `Your time to leave: ${leaveTimeString}`;
+        }
+
+        // Update the clock every second
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
+
+
